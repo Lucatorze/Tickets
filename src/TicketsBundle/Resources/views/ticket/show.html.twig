@@ -5,52 +5,23 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>Ticket</h1>
+    <a href="{{ path('ticket_index') }}">Back to the list</a> | <a href="{{ path('ticket_edit', { 'id': ticket.id }) }}">Edit</a> <br>
+    <br>
+    {{ form_start(delete_form) }}
+    <input type="submit" value="Delete this ticket">
+    {{ form_end(delete_form) }}
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ ticket.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ ticket.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ ticket.content }}</td>
-            </tr>
-            <tr>
-                <th>Author</th>
-                <td>{{ ticket.author }}</td>
-            </tr>
-            <tr>
-                <th>Created</th>
-                <td>{{ ticket.created|date('d/m/Y à H:i') }}</td>
-            </tr>
-            {% if ticket.updated is not empty %}
-            <tr>
-                <th>Updated</th>
-                <td>{{ ticket.updated|date('d/m/Y à H:i') }}</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('ticket_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('ticket_edit', { 'id': ticket.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+    <div class="ticket">
+        <span class="tTitle">{{ ticket.title }}</span>
+        Le<span class="tCreated"> {{ ticket.created|date('d/m/Y à H:i') }}</span>
+         par <span class="tAuthor">  {{ ticket.author }}</span><br>
+        <br>
+        <span class="tContent">{{ ticket.content }}</span><br>
+        <br>
+        {% if ticket.updated is not empty %}
+            <span class="tUpdated">Modifié le {{ ticket.updated|date('d/m/Y à H:i') }}</span>
+        {% endif %}
+    </div>
 
     <h1>Comments list</h1>
 

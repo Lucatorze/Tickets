@@ -100,3 +100,34 @@ header{
 .table td:nth-child(4) {
     text-align:center;
 }
+
+.ticket{
+    background-color: #fffda4;
+    text-align: center;
+    margin: 0 20% 5% 20%;
+    padding: 10px;
+}
+
+.tTitle{
+    font-size: 150%;
+    font-weight: bold;
+    text-transform: capitalize;
+    display: block;
+}
+
+.tCreated{
+    font-style: italic;
+}
+
+.tAuthor{
+    font-weight: bold;
+}
+
+.tContent{
+
+}
+
+.tUpdated{
+    display: block;
+    text-align: right;
+}
