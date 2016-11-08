@@ -1,44 +1,25 @@
 {% extends 'TicketsBundle::layout.html.twig' %}
 
 {% block title %}
-    Show {{ comment.title }} - {{ parent() }}
+    Show - {{ parent() }}
 {% endblock title %}
 
 {% block content %}
-    <h1>Comment</h1>
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ comment.id }}</td>
-            </tr>
-            <tr>
-                <th>Idticket</th>
-                <td>{{ comment.idTicket }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ comment.content }}</td>
-            </tr>
-            <tr>
-                <th>Author</th>
-                <td>{{ comment.author }}</td>
-            </tr>
-            <tr>
-                <th>Created</th>
-                <td>{{ comment.created }}</td>
-            </tr>
-            <tr>
-                <th>Updated</th>
-                <td>{{ comment.updated }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="ticket">
+        Le<span class="tCreated"> {{ comment.created|date('d/m/Y à H:i') }}</span>
+        par <span class="tAuthor">  {{ comment.author }}</span><br>
+        <br>
+        <span class="tContent">{{ comment.content }}</span><br>
+        <br>
+        {% if comment.updated is not empty %}
+            <span class="tUpdated">Modifié le {{ comment.updated|date('d/m/Y à H:i') }}</span>
+        {% endif %}
+    </div>
 
-    <ul>
+    <ul align="center">
         <li>
-            <a href="{{ path('comment_index') }}">Back to the list</a>
+            <a href="{{ path('ticket_index') }}">Back to the list of tickets</a>
         </li>
         <li>
             <a href="{{ path('comment_edit', { 'id': comment.id }) }}">Edit</a>

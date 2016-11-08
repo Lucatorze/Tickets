@@ -16,23 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 class CommentController extends Controller
 {
     /**
-     * Lists all comment entities.
-     *
-     * @Route("/", name="comment_index")
-     * @Method("GET")
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $comments = $em->getRepository('TicketsBundle:Comment')->findAll();
-
-        return $this->render('TicketsBundle:comment:index.html.twig', array(
-            'comments' => $comments,
-        ));
-    }
-
-    /**
      * Creates a new comment entity.
      *
      * @Route("/{id}/new", name="comment_new")
@@ -121,7 +104,7 @@ class CommentController extends Controller
             $em->flush($comment);
         }
 
-        return $this->redirectToRoute('comment_index');
+        return $this->redirectToRoute('ticket_index');
     }
 
     /**
