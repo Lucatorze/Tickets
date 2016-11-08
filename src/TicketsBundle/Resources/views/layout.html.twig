@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My tickets systeme{% endblock title %}</title>
+    <link rel="stylesheet" href="{{ asset('bundles/Tickets/css/default.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/Tickets/css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="navigation">
+            <ul>
+                <li><a href="{{ path("ticket_index") }}">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <div class="logo">
+            Tickets System
+        </div>
+
+    </header>
+
+    <div id="container">
+        {% block content %}{% endblock content %}
+    </div>
+
+{% block javascript %}{% endblock javascript %}
+</body>
+</html>

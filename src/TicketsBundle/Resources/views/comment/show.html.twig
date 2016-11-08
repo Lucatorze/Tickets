@@ -1,0 +1,52 @@
+{% extends 'TicketsBundle::layout.html.twig' %}
+
+{% block title %}
+    Show {{ comment.title }} - {{ parent() }}
+{% endblock title %}
+
+{% block content %}
+    <h1>Comment</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ comment.id }}</td>
+            </tr>
+            <tr>
+                <th>Idticket</th>
+                <td>{{ comment.idTicket }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ comment.content }}</td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>{{ comment.author }}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{{ comment.created }}</td>
+            </tr>
+            <tr>
+                <th>Updated</th>
+                <td>{{ comment.updated }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('comment_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('comment_edit', { 'id': comment.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

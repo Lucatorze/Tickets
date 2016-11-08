@@ -1,0 +1,100 @@
+{% extends 'TicketsBundle::layout.html.twig' %}
+
+{% block title %}
+    Show {{ ticket.title }} - {{ parent() }}
+{% endblock title %}
+
+{% block content %}
+    <h1>Ticket</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ticket.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ ticket.title }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ ticket.content }}</td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>{{ ticket.author }}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{{ ticket.created|date('d/m/Y à H:i') }}</td>
+            </tr>
+            {% if ticket.updated is not empty %}
+            <tr>
+                <th>Updated</th>
+                <td>{{ ticket.updated|date('d/m/Y à H:i') }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('ticket_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('ticket_edit', { 'id': ticket.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+
+    <h1>Comments list</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Idticket</th>
+            <th>Content</th>
+            <th>Author</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for comment in comments %}
+            <tr>
+                <td><a href="{{ path('comment_show', { 'id': comment.id }) }}">{{ comment.id }}</a></td>
+                <td>{{ comment.idTicket }}</td>
+                <td>{{ comment.content }}</td>
+                <td>{{ comment.author }}</td>
+                <td>{{ comment.created|date('d/m/Y à H:i') }}</td>
+                {% if comment.updated is not empty %}
+                <td>{{ comment.updated|date('d/m/Y à H:i') }}</td>
+                {% endif %}
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('comment_show', { 'id': comment.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('comment_edit', { 'id': comment.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('comment_new', { 'id': ticket.id }) }}">Create a new comment</a>
+        </li>
+    </ul>
+{% endblock %}

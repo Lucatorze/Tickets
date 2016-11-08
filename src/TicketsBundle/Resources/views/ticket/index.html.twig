@@ -1,0 +1,41 @@
+{% extends 'TicketsBundle::layout.html.twig' %}
+
+{% block title %}
+    Home - {{ parent() }}
+{% endblock title %}
+
+{% block content %}
+    <table class="table style">
+        <caption>Tickets list</caption>
+
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Created</th>
+                <th>Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+                <tr>
+                    <td><a href="{{ path('ticket_show', { 'id': ticket.id }) }}">{{ ticket.title }}</a></td>
+                    <td>{{ ticket.author }}</td>
+                    <td>{{ ticket.created|date('d/m/Y à H:i') }}</td>
+                    {% if ticket.updated is not empty %}
+                        <td>{{ ticket.updated|date('d/m/Y à H:i') }}</td>
+                    {% else %}
+                        <td>N/A</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('ticket_new') }}">Create a new ticket</a>
+        </li>
+    </ul>
+
+{% endblock %}
