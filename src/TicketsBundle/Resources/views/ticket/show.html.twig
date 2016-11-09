@@ -26,7 +26,7 @@
 {% for comment in comments %}
     <div class="comment">
         Le<span class="cCreated"> {{ comment.created|date('d/m/Y à H:i') }}</span>
-        par <span class="cAuthor">  {{ comment.author }}</span> | <a href="{{ path('comment_edit', { 'id': comment.id }) }}">edit</a> | <a href="{{ path('comment_show', { 'id': comment.id }) }}">delete</a><br>
+        par <span class="cAuthor">  {{ comment.author }}</span> | <a href="{{ path('comment_show', { 'id': comment.id }) }}">Edit</a><br>
         <br>
         <span class="cContent">{{ comment.content }}</span><br>
         <br>
