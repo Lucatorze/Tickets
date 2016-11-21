@@ -1,5 +1,12 @@
+users:
+    resource: "@UsersBundle/Controller/"
+    type:     annotation
+    prefix:   /user
+
 tickets:
     resource: "@TicketsBundle/Controller/"
     type:     annotation
     prefix:   /
 
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"

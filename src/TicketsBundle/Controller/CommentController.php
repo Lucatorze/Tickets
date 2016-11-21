@@ -23,26 +23,36 @@ class CommentController extends Controller
      */
     public function newAction(Request $request, Ticket $ticket)
     {
-        $comment = new Comment();
-        $form = $this->createForm('TicketsBundle\Form\CommentType', $comment);
-        $form->handleRequest($request);
+            $comment = new Comment();
+            $form = $this->createForm('TicketsBundle\Form\CommentType', $comment);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $time = new \Datetime('Europe/Paris');
-            $em = $this->getDoctrine()->getManager();
-            $comment->setIdTicket($ticket->getId());
-            $comment->setCreated($time);
-            $em->persist($comment);
-            $em->flush($comment);
+            if( $this->container->get( 'security.authorization_checker' )->isGranted( 'IS_AUTHENTICATED_FULLY' ) )
+            {
+                $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            }else{
+                return $this->redirectToRoute('fos_user_security_login');
+            }
 
-            return $this->redirectToRoute('ticket_show', array('id' => $ticket->getId()));
+            if ($form->isSubmitted() && $form->isValid()) {
+                $time = new \Datetime('Europe/Paris');
+                $em = $this->getDoctrine()->getManager();
+
+                $comment->setTicket($ticket);
+                $comment->setAuthor($user);
+                $comment->setCreated($time);
+
+                $em->persist($comment);
+                $em->flush($comment);
+
+                return $this->redirectToRoute('ticket_show', array('id' => $ticket->getId()));
+            }
+
+            return $this->render('TicketsBundle:comment:new.html.twig', array(
+                'comment' => $comment,
+                'form' => $form->createView(),
+            ));
         }
-
-        return $this->render('TicketsBundle:comment:new.html.twig', array(
-            'comment' => $comment,
-            'form' => $form->createView(),
-        ));
-    }
 
     /**
      * Finds and displays a comment entity.
@@ -71,6 +81,8 @@ class CommentController extends Controller
         $deleteForm = $this->createDeleteForm($comment);
         $editForm = $this->createForm('TicketsBundle\Form\CommentType', $comment);
         $editForm->handleRequest($request);
+
+
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $time = new \Datetime('Europe/Paris');

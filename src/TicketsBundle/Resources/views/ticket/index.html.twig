@@ -1,4 +1,4 @@
-{% extends 'TicketsBundle::layout.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %}
     Home - {{ parent() }}
@@ -31,11 +31,12 @@
             {% endfor %}
         </tbody>
     </table>
-
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
     <ul>
         <li>
             <a href="{{ path('ticket_new') }}">Create a new ticket</a>
         </li>
     </ul>
+    {% endif %}
 
 {% endblock %}

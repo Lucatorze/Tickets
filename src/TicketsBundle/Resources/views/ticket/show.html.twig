@@ -1,11 +1,11 @@
-{% extends 'TicketsBundle::layout.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %}
-    Show {{ ticket.title }} - {{ parent() }}
+    {{ ticket.title }} - {{ parent() }}
 {% endblock title %}
 
 {% block content %}
-    <a href="{{ path('ticket_index') }}">Back to the list</a> | <a href="{{ path('ticket_edit', { 'id': ticket.id }) }}">Edit</a> <br>
+    <a href="{{ path('ticket_index') }}">Back to the list</a> {% if (app.user.username == ticket.author) or (is_granted("ROLE_ADMIN")) %}| <a href="{{ path('ticket_edit', { 'id': ticket.id }) }}">Edit</a>{% endif %} <br>
     <br>
     {{ form_start(delete_form) }}
     <input type="submit" value="Delete this ticket">
@@ -16,8 +16,6 @@
         Le<span class="tCreated"> {{ ticket.created|date('d/m/Y à H:i') }}</span>
          par <span class="tAuthor">  {{ ticket.author }}</span><br>
         <br>
-        <span class="tContent">{{ ticket.content }}</span><br>
-        <br>
         {% if ticket.updated is not empty %}
             <span class="tUpdated">Modifié le {{ ticket.updated|date('d/m/Y à H:i') }}</span>
         {% endif %}
@@ -26,7 +24,7 @@
 {% for comment in comments %}
     <div class="comment">
         Le<span class="cCreated"> {{ comment.created|date('d/m/Y à H:i') }}</span>
-        par <span class="cAuthor">  {{ comment.author }}</span> | <a href="{{ path('comment_show', { 'id': comment.id }) }}">Edit</a><br>
+        par <span class="cAuthor">  {{ comment.author }}</span> {% if (app.user.username == comment.author) or (is_granted("ROLE_ADMIN")) %}| <a href="{{ path('comment_show', { 'id': comment.id }) }}">Edit</a>{% endif %}<br>
         <br>
         <span class="cContent">{{ comment.content }}</span><br>
         <br>
@@ -42,3 +40,4 @@
         </li>
     </ul>
 {% endblock %}
+

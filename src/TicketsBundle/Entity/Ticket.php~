@@ -5,12 +5,12 @@ namespace TicketsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Comment
+ * Ticket
  *
- * @ORM\Table(name="comment")
- * @ORM\Entity(repositoryClass="TicketsBundle\Repository\CommentRepository")
+ * @ORM\Table(name="ticket")
+ * @ORM\Entity(repositoryClass="TicketsBundle\Repository\TicketRepository")
  */
-class Comment
+class Ticket
 {
     /**
      * @var int
@@ -22,17 +22,11 @@ class Comment
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Ticket", cascade={"persist"})
-     * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id", nullable=false)
-     */
-    private $ticket;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text")
+     * @ORM\Column(name="title", type="string", length=255)
      */
-    private $content;
+    private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity="UsersBundle\Entity\User", cascade={"persist"})
@@ -66,27 +60,27 @@ class Comment
     }
 
     /**
-     * Set content
+     * Set title
      *
-     * @param string $content
+     * @param string $title
      *
-     * @return Comment
+     * @return Ticket
      */
-    public function setContent($content)
+    public function setTitle($title)
     {
-        $this->content = $content;
+        $this->title = $title;
 
         return $this;
     }
 
     /**
-     * Get content
+     * Get title
      *
      * @return string
      */
-    public function getContent()
+    public function getTitle()
     {
-        return $this->content;
+        return $this->title;
     }
 
     /**
@@ -94,7 +88,7 @@ class Comment
      *
      * @param \DateTime $created
      *
-     * @return Comment
+     * @return Ticket
      */
     public function setCreated($created)
     {
@@ -118,7 +112,7 @@ class Comment
      *
      * @param \DateTime $updated
      *
-     * @return Comment
+     * @return Ticket
      */
     public function setUpdated($updated)
     {
@@ -135,36 +129,5 @@ class Comment
     public function getUpdated()
     {
         return $this->updated;
-    }
-
-    /**
-     * Set ticket
-     *
-     * @param \TicketsBundle\Entity\Ticket $ticket
-     *
-     * @return Comment
-     */
-    public function setTicket(\TicketsBundle\Entity\Ticket $ticket)
-    {
-        $this->ticket = $ticket;
-
-        return $this;
-    }
-
-    /**
-     * Get ticket
-     *
-     * @return \TicketsBundle\Entity\Ticket
-     */
-    public function getTicket()
-    {
-        return $this->ticket;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->author = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

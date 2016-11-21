@@ -3,9 +3,11 @@
 namespace TicketsBundle\Controller;
 
 use TicketsBundle\Entity\Ticket;
+use TicketsBundle\Entity\Comment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class TicketController extends Controller
 {
@@ -35,15 +37,37 @@ class TicketController extends Controller
     public function newAction(Request $request)
     {
         $ticket = new Ticket();
+        $comment = new Comment();
+
         $form = $this->createForm('TicketsBundle\Form\TicketType', $ticket);
         $form->handleRequest($request);
 
+        if( $this->container->get( 'security.authorization_checker' )->isGranted( 'IS_AUTHENTICATED_FULLY' ) )
+        {
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        }else{
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
+
             $time = new \Datetime('Europe/Paris');
+
             $em = $this->getDoctrine()->getManager();
+
             $ticket->setCreated($time);
+            $ticket->setAuthor($user);
+
+            $comment->setContent($request->request->get('content'));
+            $comment->setTicket($ticket);
+            $comment->setCreated($time);
+            $comment->setAuthor($user);
+
             $em->persist($ticket);
             $em->flush($ticket);
+
+            $em->persist($comment);
+            $em->flush($comment);
 
             return $this->redirectToRoute('ticket_show', array('id' => $ticket->getId()));
         }
@@ -57,7 +81,7 @@ class TicketController extends Controller
     /**
      * Finds and displays a ticket entity.
      *
-     * @Route("/{id}", name="ticket_show")
+     * @Route("/ticket/{id}", name="ticket_show")
      * @Method("GET")
      */
     public function showAction(Ticket $ticket)
@@ -65,7 +89,10 @@ class TicketController extends Controller
         $deleteForm = $this->createDeleteForm($ticket);
 
         $em = $this->getDoctrine()->getManager();
-        $comments = $em->getRepository('TicketsBundle:Comment')->findBy(array('idTicket' => $ticket->getId()));
+
+        $comments = $this->getDoctrine()
+            ->getRepository('TicketsBundle:Comment')
+            ->findBy(['ticket' => $ticket], array('id' => 'ASC'));
 
         return $this->render('TicketsBundle:ticket:show.html.twig', array(
             'ticket' => $ticket,
@@ -89,6 +116,7 @@ class TicketController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $time = new \Datetime('Europe/Paris');
             $ticket->setUpdated($time);
+            $ticket->setAuthor($this->getUser()->getId());
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('ticket_show', array('id' => $ticket->getId()));

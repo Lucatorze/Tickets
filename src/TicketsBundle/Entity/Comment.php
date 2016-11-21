@@ -22,11 +22,10 @@ class Comment
     private $id;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="idTicket", type="integer")
+     * @ORM\ManyToOne(targetEntity="Ticket", cascade={"persist"})
+     * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id", nullable=false)
      */
-    private $idTicket;
+    private $ticket;
 
     /**
      * @var string
@@ -36,9 +35,8 @@ class Comment
     private $content;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="author", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="UsersBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
      */
     private $author;
 
@@ -68,30 +66,6 @@ class Comment
     }
 
     /**
-     * Set idTicket
-     *
-     * @param integer $idTicket
-     *
-     * @return Comment
-     */
-    public function setIdTicket($idTicket)
-    {
-        $this->idTicket = $idTicket;
-
-        return $this;
-    }
-
-    /**
-     * Get idTicket
-     *
-     * @return int
-     */
-    public function getIdTicket()
-    {
-        return $this->idTicket;
-    }
-
-    /**
      * Set content
      *
      * @param string $content
@@ -113,30 +87,6 @@ class Comment
     public function getContent()
     {
         return $this->content;
-    }
-
-    /**
-     * Set author
-     *
-     * @param string $author
-     *
-     * @return Comment
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * Get author
-     *
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return $this->author;
     }
 
     /**
@@ -185,5 +135,60 @@ class Comment
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * Set ticket
+     *
+     * @param \TicketsBundle\Entity\Ticket $ticket
+     *
+     * @return Comment
+     */
+    public function setTicket(\TicketsBundle\Entity\Ticket $ticket)
+    {
+        $this->ticket = $ticket;
+
+        return $this;
+    }
+
+    /**
+     * Get ticket
+     *
+     * @return \TicketsBundle\Entity\Ticket
+     */
+    public function getTicket()
+    {
+        return $this->ticket;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->author = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set author
+     *
+     * @param \UsersBundle\Entity\User $author
+     *
+     * @return Comment
+     */
+    public function setAuthor(\UsersBundle\Entity\User $author)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \UsersBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 }

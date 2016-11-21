@@ -12,11 +12,11 @@
             <ul>
                 <li><a href="{{ path("ticket_index") }}">Home</a></li>
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                    { 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
-                    <li>{<a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
+                    {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+                    <li><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
                 {% else %}
-                    <li><a href="{{ path('fos_user_security_login') }}">Login</a></li>
-                    <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
+                    <li><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
+                    <li><a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
                 {% endif %}
             </ul>
         </div>

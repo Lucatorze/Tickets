@@ -1,4 +1,4 @@
-{% extends 'TicketsBundle::layout.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %}
     Edit - {{ parent() }}
@@ -14,7 +14,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('comment_index') }}">Back to the list</a>
+            <a href="{{ path('ticket_index') }}">Back to the list</a>
         </li>
         <li>
             {{ form_start(delete_form) }}

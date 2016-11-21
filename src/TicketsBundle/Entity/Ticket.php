@@ -29,16 +29,8 @@ class Ticket
     private $title;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="content", type="text")
-     */
-    private $content;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="author", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="UsersBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
      */
     private $author;
 
@@ -92,54 +84,6 @@ class Ticket
     }
 
     /**
-     * Set content
-     *
-     * @param string $content
-     *
-     * @return Ticket
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * Get content
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * Set author
-     *
-     * @param string $author
-     *
-     * @return Ticket
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * Get author
-     *
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
      * Set created
      *
      * @param \DateTime $created
@@ -186,5 +130,28 @@ class Ticket
     {
         return $this->updated;
     }
-}
 
+    /**
+     * Set author
+     *
+     * @param \UsersBundle\Entity\User $author
+     *
+     * @return Ticket
+     */
+    public function setAuthor(\UsersBundle\Entity\User $author)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \UsersBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+}
