@@ -102,7 +102,7 @@ class TicketController extends Controller
         if( $ticket->getAuthor() ==  $this->container->get('security.token_storage')->getToken()->getUser() || $this->container->get( 'security.authorization_checker' )->isGranted( 'ROLE_ADMIN' ))
         {
             $deleteForm = $this->createDeleteForm($ticket);
-
+            
             $comments = $this->getDoctrine()
                 ->getRepository('TicketsBundle:Comment')
                 ->findBy(['ticket' => $ticket], array('id' => 'ASC'));

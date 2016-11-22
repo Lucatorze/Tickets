@@ -135,6 +135,6 @@ class CommentController extends Controller
             ->setAction($this->generateUrl('comment_delete', array('id' => $comment->getId())))
             ->setMethod('DELETE')
             ->getForm()
-        ;
+            ;
     }
 }
