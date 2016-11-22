@@ -135,7 +135,6 @@ class TicketController extends Controller
             if ($editForm->isSubmitted() && $editForm->isValid()) {
                 $time = new \Datetime('Europe/Paris');
                 $ticket->setUpdated($time);
-                $ticket->setAuthor($this->getUser()->getId());
                 $this->getDoctrine()->getManager()->flush();
 
                 return $this->redirectToRoute('ticket_show', array('id' => $ticket->getId()));
