@@ -89,7 +89,7 @@ class CommentController extends Controller
                 $comment->setUpdated($time);
                 $this->getDoctrine()->getManager()->flush();
 
-                return $this->redirectToRoute('comment_edit', array('id' => $comment->getId()));
+                return $this->redirectToRoute('ticket_show', array('id' => $comment->getTicket()->getId()));
             }
         }else{
             return $this->redirectToRoute('ticket_index');
