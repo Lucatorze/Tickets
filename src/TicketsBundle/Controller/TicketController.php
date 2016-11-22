@@ -21,7 +21,19 @@ class TicketController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $tickets = $em->getRepository('TicketsBundle:Ticket')->findAll();
+        if( $this->container->get( 'security.authorization_checker' )->isGranted( 'ROLE_ADMIN' ) )
+        {
+            $tickets = $em->getRepository('TicketsBundle:Ticket')->findAll();
+
+
+        }elseif ($this->container->get( 'security.authorization_checker' )->isGranted( 'IS_AUTHENTICATED_FULLY' )){
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+            $tickets = $em->getRepository('TicketsBundle:Ticket')->findByAuthor($user);
+        }else{
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
 
         return $this->render('TicketsBundle:ticket:index.html.twig', array(
             'tickets' => $tickets,
@@ -86,13 +98,18 @@ class TicketController extends Controller
      */
     public function showAction(Ticket $ticket)
     {
-        $deleteForm = $this->createDeleteForm($ticket);
 
-        $em = $this->getDoctrine()->getManager();
+        if( $ticket->getAuthor() ==  $this->container->get('security.token_storage')->getToken()->getUser() || $this->container->get( 'security.authorization_checker' )->isGranted( 'ROLE_ADMIN' ))
+        {
+            $deleteForm = $this->createDeleteForm($ticket);
 
-        $comments = $this->getDoctrine()
-            ->getRepository('TicketsBundle:Comment')
-            ->findBy(['ticket' => $ticket], array('id' => 'ASC'));
+            $comments = $this->getDoctrine()
+                ->getRepository('TicketsBundle:Comment')
+                ->findBy(['ticket' => $ticket], array('id' => 'ASC'));
+
+        }else{
+            return $this->redirectToRoute('ticket_index');
+        }
 
         return $this->render('TicketsBundle:ticket:show.html.twig', array(
             'ticket' => $ticket,
@@ -113,14 +130,21 @@ class TicketController extends Controller
         $editForm = $this->createForm('TicketsBundle\Form\TicketType', $ticket);
         $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $time = new \Datetime('Europe/Paris');
-            $ticket->setUpdated($time);
-            $ticket->setAuthor($this->getUser()->getId());
-            $this->getDoctrine()->getManager()->flush();
+        if( $this->container->get( 'security.authorization_checker' )->isGranted( 'ROLE_ADMIN' ) )
+        {
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                $time = new \Datetime('Europe/Paris');
+                $ticket->setUpdated($time);
+                $ticket->setAuthor($this->getUser()->getId());
+                $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('ticket_show', array('id' => $ticket->getId()));
+                return $this->redirectToRoute('ticket_show', array('id' => $ticket->getId()));
+            }
+        }else{
+            return $this->redirectToRoute('ticket_index');
         }
+
+
 
         return $this->render('TicketsBundle:ticket:edit.html.twig', array(
             'ticket' => $ticket,
@@ -137,13 +161,22 @@ class TicketController extends Controller
      */
     public function deleteAction(Request $request, Ticket $ticket)
     {
-        $form = $this->createDeleteForm($ticket);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if( $this->container->get( 'security.authorization_checker' )->isGranted( 'ROLE_ADMIN' ) )
+        {
+            $form = $this->createDeleteForm($ticket);
+            $form->handleRequest($request);
             $em = $this->getDoctrine()->getManager();
-            $em->remove($ticket);
-            $em->flush($ticket);
+            $comments = $em->getRepository('TicketsBundle:Comment')->findByTicket($ticket->getId());
+            if ($form->isSubmitted() && $form->isValid()) {
+                foreach ($comments as $comment) {
+                    $em->remove($comment);
+                }
+                $em->remove($ticket);
+                $em->flush($ticket);
+            }
+        }else{
+            return $this->redirectToRoute('ticket_index');
         }
 
         return $this->redirectToRoute('ticket_index');

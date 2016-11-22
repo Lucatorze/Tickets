@@ -5,11 +5,13 @@
 {% endblock title %}
 
 {% block content %}
-    <a href="{{ path('ticket_index') }}">Back to the list</a> {% if (app.user.username == ticket.author) or (is_granted("ROLE_ADMIN")) %}| <a href="{{ path('ticket_edit', { 'id': ticket.id }) }}">Edit</a>{% endif %} <br>
-    <br>
-    {{ form_start(delete_form) }}
-    <input type="submit" value="Delete this ticket">
-    {{ form_end(delete_form) }}
+    <a href="{{ path('ticket_index') }}">Back to the list</a>
+    {% if is_granted("ROLE_ADMIN") %}| <a href="{{ path('ticket_edit', { 'id': ticket.id }) }}">Edit</a> <br>
+        <br>
+        {{ form_start(delete_form) }}
+        <input type="submit" value="Delete this ticket">
+        {{ form_end(delete_form) }}
+    {% endif %}
 
     <div class="ticket">
         <span class="tTitle">{{ ticket.title }}</span>
@@ -24,7 +26,7 @@
 {% for comment in comments %}
     <div class="comment">
         Le<span class="cCreated"> {{ comment.created|date('d/m/Y à H:i') }}</span>
-        par <span class="cAuthor">  {{ comment.author }}</span> {% if (app.user.username == comment.author) or (is_granted("ROLE_ADMIN")) %}| <a href="{{ path('comment_show', { 'id': comment.id }) }}">Edit</a>{% endif %}<br>
+        par <span class="cAuthor">  {{ comment.author }}</span> {% if is_granted("ROLE_ADMIN") %}| <a href="{{ path('comment_show', { 'id': comment.id }) }}">Edit</a>{% endif %}<br>
         <br>
         <span class="cContent">{{ comment.content }}</span><br>
         <br>

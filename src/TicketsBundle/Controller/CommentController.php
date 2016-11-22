@@ -82,14 +82,17 @@ class CommentController extends Controller
         $editForm = $this->createForm('TicketsBundle\Form\CommentType', $comment);
         $editForm->handleRequest($request);
 
+        if( $this->container->get( 'security.authorization_checker' )->isGranted( 'ROLE_ADMIN' ) )
+        {
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                $time = new \Datetime('Europe/Paris');
+                $comment->setUpdated($time);
+                $this->getDoctrine()->getManager()->flush();
 
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $time = new \Datetime('Europe/Paris');
-            $comment->setUpdated($time);
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('comment_edit', array('id' => $comment->getId()));
+                return $this->redirectToRoute('comment_edit', array('id' => $comment->getId()));
+            }
+        }else{
+            return $this->redirectToRoute('ticket_index');
         }
 
         return $this->render('TicketsBundle:comment:edit.html.twig', array(
